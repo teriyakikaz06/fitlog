@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>FitLog</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="theme-color" content="#2f6df0">
+  <!-- iOS: ホーム画面に追加でアプリ風に -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="FitLog">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="icon" href="icons/icon-192.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>FitLog</h1>
+    <nav class="tabs">
+      <button class="tab active" data-tab="record">記録</button>
+      <button class="tab" data-tab="chart">グラフ</button>
+      <button class="tab" data-tab="goals">目標</button>
+    </nav>
+  </header>
+
+  <div id="toast" class="toast hidden"></div>
+
+  <!-- ===================== 記録タブ ===================== -->
+  <section id="tab-record" class="tab-panel">
+    <div class="date-nav">
+      <button id="prev-day">◀ 前日</button>
+      <input type="date" id="date-picker">
+      <button id="next-day">翌日 ▶</button>
+      <button id="today-btn" class="ghost">今日</button>
+    </div>
+
+    <div class="card">
+      <h2>体重</h2>
+      <div class="weight-row">
+        <input type="number" id="weight-input" inputmode="decimal" step="0.1" min="0" placeholder="例: 78.5">
+        <span class="unit">kg</span>
+        <button id="weight-save">保存</button>
+        <button id="weight-clear" class="ghost">クリア</button>
+        <span id="weight-diff" class="diff"></span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>今日の合計</h2>
+      <div id="progress-area"></div>
+    </div>
+
+    <div class="card">
+      <h2>食事</h2>
+      <table class="data-table" id="meal-table">
+        <thead>
+          <tr><th>メニュー</th><th>P(g)</th><th>F(g)</th><th>C(g)</th><th>kcal</th><th></th></tr>
+        </thead>
+        <tbody id="meal-tbody"></tbody>
+      </table>
+      <div class="add-row">
+        <input type="text" id="meal-name" placeholder="メニュー名">
+        <input type="number" id="meal-p" inputmode="decimal" step="0.1" min="0" placeholder="P">
+        <input type="number" id="meal-f" inputmode="decimal" step="0.1" min="0" placeholder="F">
+        <input type="number" id="meal-c" inputmode="decimal" step="0.1" min="0" placeholder="C">
+        <button id="meal-add">追加</button>
+      </div>
+
+      <div class="paste-area">
+        <h3>解析結果を貼り付け</h3>
+        <p class="hint">1行＝1料理。<code>メニュー名 | P○ F○ C○</code>（P/F/Cは順不同・空白区切り）</p>
+        <textarea id="paste-input" rows="4" placeholder="鶏むね焼き | P40 F4 C0&#10;白米 茶碗1杯 | P4 F0 C55&#10;味噌汁 | P3 F2 C6"></textarea>
+        <div class="paste-actions">
+          <button id="paste-import">取り込む</button>
+          <button id="paste-clear" class="ghost">クリア</button>
+        </div>
+        <div id="paste-result" class="paste-result hidden"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>運動</h2>
+      <table class="data-table" id="ex-table">
+        <thead>
+          <tr><th>種目</th><th>種別</th><th>メモ</th><th></th></tr>
+        </thead>
+        <tbody id="ex-tbody"></tbody>
+      </table>
+      <div class="add-row">
+        <input type="text" id="ex-name" placeholder="種目名">
+        <select id="ex-cat">
+          <option>筋トレ</option>
+          <option>有酸素</option>
+          <option>その他</option>
+        </select>
+        <input type="text" id="ex-memo" placeholder="メモ（例: 60kg×8回×3セット）">
+        <button id="ex-add">追加</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== グラフタブ ===================== -->
+  <section id="tab-chart" class="tab-panel hidden">
+    <p class="muted">直近30日の推移（点線は目標値）</p>
+    <div class="card">
+      <h2>体重 (kg)</h2>
+      <div class="chart-box"><canvas id="chart-weight"></canvas></div>
+    </div>
+    <div class="card">
+      <h2>摂取カロリー (kcal)</h2>
+      <div class="chart-box"><canvas id="chart-calorie"></canvas></div>
+    </div>
+    <div class="card">
+      <h2>タンパク質 P (g)</h2>
+      <div class="chart-box"><canvas id="chart-protein"></canvas></div>
+    </div>
+  </section>
+
+  <!-- ===================== 目標タブ ===================== -->
+  <section id="tab-goals" class="tab-panel hidden">
+    <div class="card">
+      <h2>1日の目標</h2>
+      <div class="goal-grid">
+        <label>カロリー (kcal)<input type="number" id="goal-calorie" inputmode="numeric" min="0"></label>
+        <label>タンパク質 P (g)<input type="number" id="goal-protein" inputmode="numeric" min="0"></label>
+        <label>脂質 F (g)<input type="number" id="goal-fat" inputmode="numeric" min="0"></label>
+        <label>炭水化物 C (g)<input type="number" id="goal-carb" inputmode="numeric" min="0"></label>
+        <label>目標体重 (kg)<input type="number" id="goal-weight" inputmode="decimal" step="0.1" min="0"></label>
+      </div>
+      <button id="goal-save">目標を保存</button>
+      <p class="note">※ タンパク質目標は「除脂肪体重 × 2.0〜2.3g」が目安です。</p>
+    </div>
+
+    <div class="card">
+      <h2>データのバックアップ</h2>
+      <p class="note">記録はこの端末の中だけに保存されています。機種変更や紛失に備えて、ときどき書き出して保管してください。</p>
+      <div class="backup-actions">
+        <button id="backup-export">書き出し（JSON）</button>
+        <label class="filebtn">読み込み
+          <input type="file" id="backup-import-file" accept="application/json,.json" hidden>
+        </label>
+      </div>
+      <p class="note">読み込むと現在のデータは置き換わります。</p>
+    </div>
+  </section>
+
+  <script src="chart.min.js"></script>
+  <script src="store.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
