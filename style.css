@@ -189,6 +189,24 @@ input, select {
   font-size: 13px;
   resize: vertical;
 }
+.prompt-box {
+  margin-bottom: 10px;
+  background: var(--bar-bg);
+  border-radius: 8px;
+  padding: 8px 12px;
+}
+.prompt-box summary { cursor: pointer; font-size: 13px; font-weight: 600; }
+.prompt-box pre {
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 8px 10px;
+  margin: 8px 0;
+}
 .paste-actions { display: flex; gap: 8px; margin-top: 8px; }
 .paste-result {
   margin-top: 12px;

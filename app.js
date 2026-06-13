@@ -202,6 +202,26 @@ $("#paste-clear").addEventListener("click", () => {
   $("#paste-result").classList.add("hidden");
 });
 
+// 解析用プロンプトをコピー
+$("#copy-prompt").addEventListener("click", async () => {
+  const text = $("#analysis-prompt").textContent;
+  try {
+    await navigator.clipboard.writeText(text);
+    toast("プロンプトをコピーしました");
+  } catch (e) {
+    // 古いSafari等のフォールバック
+    const ta = document.createElement("textarea");
+    ta.value = text;
+    ta.style.position = "fixed";
+    ta.style.opacity = "0";
+    document.body.appendChild(ta);
+    ta.focus(); ta.select();
+    try { document.execCommand("copy"); toast("プロンプトをコピーしました"); }
+    catch (_) { toast("コピーできませんでした。手動で選択してください", true); }
+    document.body.removeChild(ta);
+  }
+});
+
 function renderPasteResult(added, failed) {
   const el = $("#paste-result");
   let html = `<span class="ok">${added}件 取り込みました</span>`;

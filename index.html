@@ -70,6 +70,17 @@
       <div class="paste-area">
         <h3>解析結果を貼り付け</h3>
         <p class="hint">1行＝1料理。<code>メニュー名 | P○ F○ C○</code>（P/F/Cは順不同・空白区切り）</p>
+
+        <details class="prompt-box">
+          <summary>📋 写真解析用のプロンプト（Claudeに貼る）</summary>
+          <pre id="analysis-prompt">この食事の写真を見て、料理ごとに1行で、次の形式だけで出力して。説明や前置きは不要：
+メニュー名 | P◯ F◯ C◯
+P=タンパク質, F=脂質, C=炭水化物 のグラム数（数値のみ、単位gは書かない）
+例）鶏むね焼き | P40 F4 C0</pre>
+          <button id="copy-prompt" class="ghost" type="button">このプロンプトをコピー</button>
+          <p class="hint">Claudeアプリで食事の写真とこのプロンプトを送り、返ってきた行をコピーして下に貼り付け→「取り込む」。</p>
+        </details>
+
         <textarea id="paste-input" rows="4" placeholder="鶏むね焼き | P40 F4 C0&#10;白米 茶碗1杯 | P4 F0 C55&#10;味噌汁 | P3 F2 C6"></textarea>
         <div class="paste-actions">
           <button id="paste-import">取り込む</button>
