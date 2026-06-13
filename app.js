@@ -202,9 +202,8 @@ $("#paste-clear").addEventListener("click", () => {
   $("#paste-result").classList.add("hidden");
 });
 
-// 解析用プロンプトをコピー
-$("#copy-prompt").addEventListener("click", async () => {
-  const text = $("#analysis-prompt").textContent;
+// 解析用プロンプトをコピー（① 料理 / ② 市販品 の両ボタンに対応）
+async function copyText(text) {
   try {
     await navigator.clipboard.writeText(text);
     toast("プロンプトをコピーしました");
@@ -220,6 +219,12 @@ $("#copy-prompt").addEventListener("click", async () => {
     catch (_) { toast("コピーできませんでした。手動で選択してください", true); }
     document.body.removeChild(ta);
   }
+}
+document.querySelectorAll(".copy-prompt-btn").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    const el = document.getElementById(btn.dataset.target);
+    if (el) copyText(el.textContent);
+  });
 });
 
 function renderPasteResult(added, failed) {

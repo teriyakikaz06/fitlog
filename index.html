@@ -73,12 +73,28 @@
 
         <details class="prompt-box">
           <summary>📋 写真解析用のプロンプト（Claudeに貼る）</summary>
-          <pre id="analysis-prompt">この食事の写真を見て、料理ごとに1行で、次の形式だけで出力して。説明や前置きは不要：
+
+          <div class="prompt-item">
+            <div class="prompt-title">① 料理（見た目から推定）</div>
+            <pre id="analysis-prompt">この食事の写真を見て、料理ごとに1行で、次の形式だけで出力して。説明や前置きは不要：
 メニュー名 | P◯ F◯ C◯
 P=タンパク質, F=脂質, C=炭水化物 のグラム数（数値のみ、単位gは書かない）
 例）鶏むね焼き | P40 F4 C0</pre>
-          <button id="copy-prompt" class="ghost" type="button">このプロンプトをコピー</button>
-          <p class="hint">Claudeアプリで食事の写真とこのプロンプトを送り、返ってきた行をコピーして下に貼り付け→「取り込む」。</p>
+            <button class="ghost copy-prompt-btn" type="button" data-target="analysis-prompt">このプロンプトをコピー</button>
+          </div>
+
+          <div class="prompt-item">
+            <div class="prompt-title">② 市販品（栄養成分表示から・正確）</div>
+            <pre id="analysis-prompt-label">この栄養成分表示（パッケージ）の写真を読み取り、次の形式だけで出力して。説明や前置きは不要：
+メニュー名 | P◯ F◯ C◯
+P=たんぱく質, F=脂質, C=炭水化物 のグラム数（数値のみ、単位gは書かない）。
+・「糖質」と「食物繊維」に分かれている場合は C = 糖質 + 食物繊維。
+・「1個あたり」「100gあたり」など単位を確認し、実際に食べる量に合わせて計算。
+例）○○メロンパン | P8 F12 C45</pre>
+            <button class="ghost copy-prompt-btn" type="button" data-target="analysis-prompt-label">このプロンプトをコピー</button>
+          </div>
+
+          <p class="hint">Claudeアプリで写真とこのプロンプトを送り、返ってきた行をコピーして下に貼り付け→「取り込む」。市販品はパッケージ裏の栄養成分表示を撮るのが正確です。</p>
         </details>
 
         <textarea id="paste-input" rows="4" placeholder="鶏むね焼き | P40 F4 C0&#10;白米 茶碗1杯 | P4 F0 C55&#10;味噌汁 | P3 F2 C6"></textarea>

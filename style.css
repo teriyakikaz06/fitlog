@@ -196,6 +196,8 @@ input, select {
   padding: 8px 12px;
 }
 .prompt-box summary { cursor: pointer; font-size: 13px; font-weight: 600; }
+.prompt-item { margin-top: 10px; }
+.prompt-title { font-size: 12px; font-weight: 600; color: var(--accent); margin-bottom: 4px; }
 .prompt-box pre {
   white-space: pre-wrap;
   word-break: break-word;
