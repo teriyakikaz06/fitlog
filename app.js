@@ -109,43 +109,49 @@ function renderProgress(totals) {
 
 // ===== 食事 =====
 function renderMeals(meals) {
-  const tbody = $("#meal-tbody");
+  const list = $("#meal-list");
   if (!meals.length) {
-    tbody.innerHTML = `<tr class="empty-row"><td colspan="6">まだ食事の記録がありません</td></tr>`;
+    list.innerHTML = `<p class="empty-msg">まだ食事の記録がありません</p>`;
     return;
   }
-  tbody.innerHTML = "";
-  meals.forEach((m) => tbody.appendChild(mealRow(m)));
+  list.innerHTML = "";
+  meals.forEach((m) => list.appendChild(mealCard(m)));
 }
 
-function mealRow(m) {
-  const tr = document.createElement("tr");
-  tr.innerHTML = `
-    <td><input type="text" value="${escapeHtml(m.name)}"></td>
-    <td><input class="num" type="number" inputmode="decimal" step="0.1" min="0" value="${m.protein}"></td>
-    <td><input class="num" type="number" inputmode="decimal" step="0.1" min="0" value="${m.fat}"></td>
-    <td><input class="num" type="number" inputmode="decimal" step="0.1" min="0" value="${m.carb}"></td>
-    <td class="kcal">${fmt(m.calorie)}</td>
-    <td><button class="link">削除</button></td>`;
-  const [nameI, pI, fI, cI] = tr.querySelectorAll("input");
-  const kcalCell = tr.querySelector(".kcal");
+function mealCard(m) {
+  const div = document.createElement("div");
+  div.className = "item";
+  div.innerHTML = `
+    <div class="item-line1">
+      <input type="text" value="${escapeHtml(m.name)}" placeholder="メニュー名">
+      <button class="del-btn" type="button">削除</button>
+    </div>
+    <div class="item-line2">
+      <label class="pfc-field">P<input type="number" inputmode="decimal" step="0.1" min="0" value="${m.protein}"></label>
+      <label class="pfc-field">F<input type="number" inputmode="decimal" step="0.1" min="0" value="${m.fat}"></label>
+      <label class="pfc-field">C<input type="number" inputmode="decimal" step="0.1" min="0" value="${m.carb}"></label>
+      <span class="kcal">${fmt(m.calorie)} kcal</span>
+    </div>`;
+  const nameI = div.querySelector(".item-line1 input");
+  const [pI, fI, cI] = div.querySelectorAll(".item-line2 input");
+  const kcalEl = div.querySelector(".kcal");
 
   const save = async () => {
     try {
       const updated = await Store.updateMeal(m.id, {
         name: nameI.value, protein: pI.value, fat: fI.value, carb: cI.value,
       });
-      kcalCell.textContent = fmt(updated.calorie);
+      kcalEl.textContent = `${fmt(updated.calorie)} kcal`;
       loadDay();
     } catch (e) { toast(e.message, true); loadDay(); }
   };
   [nameI, pI, fI, cI].forEach((inp) => inp.addEventListener("change", save));
 
-  tr.querySelector("button").addEventListener("click", async () => {
+  div.querySelector(".del-btn").addEventListener("click", async () => {
     try { await Store.deleteMeal(m.id); loadDay(); }
     catch (e) { toast(e.message, true); }
   });
-  return tr;
+  return div;
 }
 
 $("#meal-add").addEventListener("click", async () => {
@@ -242,26 +248,31 @@ function renderPasteResult(added, failed) {
 
 // ===== 運動 =====
 function renderExercises(exs) {
-  const tbody = $("#ex-tbody");
+  const list = $("#ex-list");
   if (!exs.length) {
-    tbody.innerHTML = `<tr class="empty-row"><td colspan="4">まだ運動の記録がありません</td></tr>`;
+    list.innerHTML = `<p class="empty-msg">まだ運動の記録がありません</p>`;
     return;
   }
-  tbody.innerHTML = "";
-  exs.forEach((x) => tbody.appendChild(exRow(x)));
+  list.innerHTML = "";
+  exs.forEach((x) => list.appendChild(exCard(x)));
 }
 
-function exRow(x) {
+function exCard(x) {
   const cats = ["筋トレ", "有酸素", "その他"];
-  const tr = document.createElement("tr");
-  tr.innerHTML = `
-    <td><input type="text" value="${escapeHtml(x.name)}"></td>
-    <td><select>${cats.map((c) => `<option${c === x.category ? " selected" : ""}>${c}</option>`).join("")}</select></td>
-    <td><input type="text" value="${escapeHtml(x.memo)}"></td>
-    <td><button class="link">削除</button></td>`;
-  const nameI = tr.querySelector("input[type=text]");
-  const catS = tr.querySelector("select");
-  const memoI = tr.querySelectorAll("input[type=text]")[1];
+  const div = document.createElement("div");
+  div.className = "item";
+  div.innerHTML = `
+    <div class="item-line1">
+      <input type="text" value="${escapeHtml(x.name)}" placeholder="種目名">
+      <button class="del-btn" type="button">削除</button>
+    </div>
+    <div class="item-line2">
+      <select>${cats.map((c) => `<option${c === x.category ? " selected" : ""}>${c}</option>`).join("")}</select>
+      <input class="memo" type="text" value="${escapeHtml(x.memo)}" placeholder="メモ">
+    </div>`;
+  const nameI = div.querySelector(".item-line1 input");
+  const catS = div.querySelector("select");
+  const memoI = div.querySelector(".memo");
 
   const save = async () => {
     try { await Store.updateExercise(x.id, { name: nameI.value, category: catS.value, memo: memoI.value }); }
@@ -269,11 +280,11 @@ function exRow(x) {
   };
   [nameI, catS, memoI].forEach((el) => el.addEventListener("change", save));
 
-  tr.querySelector("button").addEventListener("click", async () => {
+  div.querySelector(".del-btn").addEventListener("click", async () => {
     try { await Store.deleteExercise(x.id); loadDay(); }
     catch (e) { toast(e.message, true); }
   });
-  return tr;
+  return div;
 }
 
 $("#ex-add").addEventListener("click", async () => {

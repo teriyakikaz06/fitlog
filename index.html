@@ -53,12 +53,7 @@
 
     <div class="card">
       <h2>食事</h2>
-      <table class="data-table" id="meal-table">
-        <thead>
-          <tr><th>メニュー</th><th>P(g)</th><th>F(g)</th><th>C(g)</th><th>kcal</th><th></th></tr>
-        </thead>
-        <tbody id="meal-tbody"></tbody>
-      </table>
+      <div id="meal-list" class="item-list"></div>
       <div class="add-row">
         <input type="text" id="meal-name" placeholder="メニュー名">
         <input type="number" id="meal-p" inputmode="decimal" step="0.1" min="0" placeholder="P">
@@ -108,12 +103,7 @@ P=たんぱく質, F=脂質, C=炭水化物 のグラム数（数値のみ、単
 
     <div class="card">
       <h2>運動</h2>
-      <table class="data-table" id="ex-table">
-        <thead>
-          <tr><th>種目</th><th>種別</th><th>メモ</th><th></th></tr>
-        </thead>
-        <tbody id="ex-tbody"></tbody>
-      </table>
+      <div id="ex-list" class="item-list"></div>
       <div class="add-row">
         <input type="text" id="ex-name" placeholder="種目名">
         <select id="ex-cat">

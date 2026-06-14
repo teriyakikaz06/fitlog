@@ -5,7 +5,7 @@
  * データは IndexedDB 側にあり、ここでは扱わない。
  */
 
-const CACHE = "fitlog-v3";
+const CACHE = "fitlog-v4";
 const ASSETS = [
   "./",
   "./index.html",

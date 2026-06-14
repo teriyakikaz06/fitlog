@@ -125,18 +125,43 @@ input, select {
 }
 .progress-fill.over { background: var(--warn); }
 
-/* テーブル */
-.data-table { width: 100%; border-collapse: collapse; margin-bottom: 12px; }
-.data-table th, .data-table td {
-  padding: 8px 6px;
-  text-align: left;
-  border-bottom: 1px solid var(--line);
-  font-size: 14px;
+/* 記録カード（食事・運動）— スマホでも縦に見やすい */
+.item-list { margin-bottom: 12px; }
+.item {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 10px;
+  margin-bottom: 8px;
 }
-.data-table th { color: var(--muted); font-weight: 600; font-size: 12px; }
-.data-table td input, .data-table td select { width: 100%; }
-.data-table .num { width: 64px; }
-.empty-row td { color: var(--muted); text-align: center; padding: 14px; }
+.item-line1 { display: flex; gap: 8px; align-items: center; }
+.item-line1 input[type="text"] { flex: 1; min-width: 0; font-weight: 600; }
+.item-line2 {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+.pfc-field {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.pfc-field input { width: 58px; }
+.item-line2 select { flex: 0 0 auto; }
+.item-line2 .memo { flex: 1; min-width: 120px; }
+.item .kcal { margin-left: auto; font-weight: 600; font-size: 13px; white-space: nowrap; }
+.del-btn {
+  flex: 0 0 auto;
+  background: none;
+  color: var(--warn);
+  padding: 4px 8px;
+  font-size: 13px;
+}
+.del-btn:hover { background: var(--bar-bg); }
+.empty-msg { color: var(--muted); text-align: center; padding: 14px; margin: 0; }
 
 /* 追加行 */
 .add-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
